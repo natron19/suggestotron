@@ -120,7 +120,7 @@
 	"buffers":
 	[
 		{
-			"file": "app/views/topics/index.html.erb",
+			"file": "index.html.erb",
 			"settings":
 			{
 				"buffer_size": 832,
@@ -128,36 +128,23 @@
 			}
 		},
 		{
-			"contents": "class TopicsController < ApplicationController\n  before_action :set_topic, only: [:show, :edit, :update, :destroy]\n\n  # GET /topics\n  # GET /topics.json\n  def index\n    @topics = Topic.all\n  end\n\n  # GET /topics/1\n  # GET /topics/1.json\n  def show\n  end\n\n  # GET /topics/new\n  def new\n    @topic = Topic.new\n  end\n\n  # GET /topics/1/edit\n  def edit\n  end\n\n  # POST /topics\n  # POST /topics.json\n  def create\n    @topic = Topic.new(topic_params)\n\n    respond_to do |format|\n      if @topic.save\n        format.html { redirect_to topics_path, notice: 'Topic was successfully created.' }\n        format.json { render :show, status: :created, location: @topic }\n      else\n        format.html { render :new }\n        format.json { render json: @topic.errors, status: :unprocessable_entity }\n      end\n    end\n  end\n\n  # PATCH/PUT /topics/1\n  # PATCH/PUT /topics/1.json\n  def update\n    respond_to do |format|\n      if @topic.update(topic_params)\n        format.html { redirect_to topics_path, notice: 'Topic was successfully updated.' }\n        format.json { render :show, status: :ok, location: @topic }\n      else\n        format.html { render :edit }\n        format.json { render json: @topic.errors, status: :unprocessable_entity }\n      end\n    end\n  end\n\n  # DELETE /topics/1\n  # DELETE /topics/1.json\n  def destroy\n    @topic.destroy\n    respond_to do |format|\n      format.html { redirect_to topics_url, notice: 'Topic was successfully destroyed.' }\n      format.json { head :no_content }\n    end\n  end\n\n  def upvote \n    @topic = Topic.find(params[:id])\n    @topic.votes.create \n    redirect_to(topics_path)\n  end \n\n  def downvote\n    @topic = Topic.find(params[:id])\n    while @topic.votes.count > 0 do  \n      @topic.votes.first.destroy\n    end \n    redirect_to(topics_path)\n  end \n\n  private\n    # Use callbacks to share common setup or constraints between actions.\n    def set_topic\n      @topic = Topic.find(params[:id])\n    end\n\n    # Never trust parameters from the scary internet, only allow the white list through.\n    def topic_params\n      params.require(:topic).permit(:title, :description)\n    end\nend\n",
-			"file": "app/controllers/topics_controller.rb",
-			"file_size": 2119,
-			"file_write_time": 1420874266000000,
+			"contents": "class TopicsController < ApplicationController\n  before_action :set_topic, only: [:show, :edit, :update, :destroy]\n\n  # GET /topics\n  # GET /topics.json\n  def index\n    @topics = Topic.all\n  end\n\n  # GET /topics/1\n  # GET /topics/1.json\n  def show\n  end\n\n  # GET /topics/new\n  def new\n    @topic = Topic.new\n  end\n\n  # GET /topics/1/edit\n  def edit\n  end\n\n  # POST /topics\n  # POST /topics.json\n  def create\n    @topic = Topic.new(topic_params)\n\n    respond_to do |format|\n      if @topic.save\n        format.html { redirect_to topics_path, notice: 'Topic was successfully created.' }\n        format.json { render :show, status: :created, location: @topic }\n      else\n        format.html { render :new }\n        format.json { render json: @topic.errors, status: :unprocessable_entity }\n      end\n    end\n  end\n\n  # PATCH/PUT /topics/1\n  # PATCH/PUT /topics/1.json\n  def update\n    respond_to do |format|\n      if @topic.update(topic_params)\n        format.html { redirect_to topics_path, notice: 'Topic was successfully updated.' }\n        format.json { render :show, status: :ok, location: @topic }\n      else\n        format.html { render :edit }\n        format.json { render json: @topic.errors, status: :unprocessable_entity }\n      end\n    end\n  end\n\n  # DELETE /topics/1\n  # DELETE /topics/1.json\n  def destroy\n    @topic.destroy\n    respond_to do |format|\n      format.html { redirect_to topics_url, notice: 'Topic was successfully destroyed.' }\n      format.json { head :no_content }\n    end\n  end\n\n  def upvote \n    @topic = Topic.find(params[:id])\n    @topic.votes.create \n    redirect_to(topics_path)\n  end \n\n  def downvote\n    @topic = Topic.find(params[:id])\n    @topic.votes.first.destroy if @topic.votes.count > 0\n    redirect_to(topics_path)\n  end \n\n  private\n    # Use callbacks to share common setup or constraints between actions.\n    def set_topic\n      @topic = Topic.find(params[:id])\n    end\n\n    # Never trust parameters from the scary internet, only allow the white list through.\n    def topic_params\n      params.require(:topic).permit(:title, :description)\n    end\nend\n",
+			"file": "/Users/nathanrohm/Dropbox/UWRailsCert/railsbridge/suggestotron/app/controllers/topics_controller.rb",
+			"file_size": 2114,
+			"file_write_time": 1421298747000000,
 			"settings":
 			{
-				"buffer_size": 2119,
+				"buffer_size": 2096,
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"contents": "Rails.application.routes.draw do\n  root 'topics#index' \n  resources :topics do \n    member do \n      post 'upvote' \n      post 'downvote'\n    end \n  end\n\n  \n\n  # The priority is based upon order of creation: first created -> highest priority.\n  # See how all your routes lay out with \"rake routes\".\n\n  # You can have the root of your site routed with \"root\"\n  # root 'welcome#index'\n\n  # Example of regular route:\n  #   get 'products/:id' => 'catalog#view'\n\n  # Example of named route that can be invoked with purchase_url(id: product.id)\n  #   get 'products/:id/purchase' => 'catalog#purchase', as: :purchase\n\n  # Example resource route (maps HTTP verbs to controller actions automatically):\n  #   resources :products\n\n  # Example resource route with options:\n  #   resources :products do\n  #     member do\n  #       get 'short'\n  #       post 'toggle'\n  #     end\n  #\n  #     collection do\n  #       get 'sold'\n  #     end\n  #   end\n\n  # Example resource route with sub-resources:\n  #   resources :products do\n  #     resources :comments, :sales\n  #     resource :seller\n  #   end\n\n  # Example resource route with more complex sub-resources:\n  #   resources :products do\n  #     resources :comments\n  #     resources :sales do\n  #       get 'recent', on: :collection\n  #     end\n  #   end\n\n  # Example resource route with concerns:\n  #   concern :toggleable do\n  #     post 'toggle'\n  #   end\n  #   resources :posts, concerns: :toggleable\n  #   resources :photos, concerns: :toggleable\n\n  # Example resource route within a namespace:\n  #   namespace :admin do\n  #     # Directs /admin/products/* to Admin::ProductsController\n  #     # (app/controllers/admin/products_controller.rb)\n  #     resources :products\n  #   end\nend\n",
-			"file": "config/routes.rb",
-			"file_size": 1722,
-			"file_write_time": 1420873507000000,
+			"contents": "def foo(param1, param2, param3)\nend\n\n{\n  fruit: :apple\n  computer: :apple\n  power: :pse'\n}\n\ndef foo(param1, options)\n  @test ||= options[:test]\nend",
 			"settings":
 			{
-				"buffer_size": 1726,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"contents": "",
-			"file": "app/views/topics/about.html.erb",
-			"file_size": 50,
-			"file_write_time": 1420876003000000,
-			"settings":
-			{
-				"buffer_size": 0,
-				"line_ending": "Unix"
+				"buffer_size": 147,
+				"line_ending": "Unix",
+				"name": "def foo(param1, param2, param3)"
 			}
 		}
 	],
@@ -450,12 +437,11 @@
 	"groups":
 	[
 		{
-			"selected": 3,
 			"sheets":
 			[
 				{
 					"buffer": 0,
-					"file": "app/views/topics/index.html.erb",
+					"file": "index.html.erb",
 					"settings":
 					{
 						"buffer_size": 832,
@@ -465,8 +451,8 @@
 						"selection":
 						[
 							[
-								32,
-								32
+								525,
+								525
 							]
 						],
 						"settings":
@@ -483,46 +469,18 @@
 				},
 				{
 					"buffer": 1,
-					"file": "app/controllers/topics_controller.rb",
+					"file": "/Users/nathanrohm/Dropbox/UWRailsCert/railsbridge/suggestotron/app/controllers/topics_controller.rb",
 					"settings":
 					{
-						"buffer_size": 2119,
+						"buffer_size": 2096,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1751,
-								1751
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Ruby/Ruby.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 97.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 2,
-					"file": "config/routes.rb",
-					"settings":
-					{
-						"buffer_size": 1726,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								156,
-								156
+								763,
+								784
 							]
 						],
 						"settings":
@@ -538,24 +496,24 @@
 					"type": "text"
 				},
 				{
-					"buffer": 3,
-					"file": "app/views/topics/about.html.erb",
+					"buffer": 2,
 					"settings":
 					{
-						"buffer_size": 0,
+						"buffer_size": 147,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								0,
-								0
+								147,
+								147
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/Rails/HTML (Rails).tmLanguage"
+							"auto_name": "def foo(param1, param2, param3)",
+							"syntax": "Packages/Text/Plain text.tmLanguage"
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
@@ -611,6 +569,10 @@
 		"height": 0.0,
 		"selected_items":
 		[
+			[
+				"view",
+				"app/views/topics/index.html.erb"
+			],
 			[
 				"index",
 				"app/views/topics/index.html.erb"
